@@ -1,0 +1,54 @@
+#pixel = w*y + x;
+R G B A
+vetor continuo
+
+getImageData(img) {
+  var canvas = document.createElement('canvas');
+  canvas.width = this.width;
+  canvas.height = this.height;
+
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, this.width, this.height);
+  return ctx.getImageData(0, 0, this.width, this.height);
+}
+
+draw(ctx) {
+  ctx.drawImage(...) mais pesado q ctx.putImageData...
+}
+
+spritearray...
+Class SpriteImage
+
+keyDownHandler e keyUpHandler
+ctx ev sprite
+
+canvasMouseMoveHandler(ev, ctx, spriteArray)
+if draggable && spriteArray.mouseDown
+ev.offsetX - sparray.mouseOffsetX (para y tbm)
+
+---
+
+var tID;
+function startCrono () {
+
+}
+
+---
+
+function animLoop(ctx, sparray, som, starttime, time) {}
+  var a1 = function(time) {
+    if (startTime == 0)
+      startTime = time;
+    animLoop(ctx, spArray, som, startTime, time);
+  }
+  var reqID = window.requestAnimationFrame(al);
+
+  render...
+}
+
+
+organizacao do projeto....
+pastas
+html, code, css, resources, version control
+proteger codigo -> ajax e servidor
+texto nao selecionavel -> user-select:none CSS

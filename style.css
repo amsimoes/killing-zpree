@@ -1,0 +1,35 @@
+#container {
+  height = 600px;
+  width = 600px;
+  position: relative;
+  text-align: center;
+}
+
+#myCanvas {
+  height: 600px;
+  width: 600px;
+  margin: auto;
+  display: block;
+  border: 2px solid #aaaaaa;
+  background-color: rgba(0, 0, 0, 1);
+}
+
+#logo {
+  margin: auto;
+  bottom: 360px;
+  left: 465px;
+  position: absolute;
+}
+
+#options {
+  left: 34%;
+  top: 45%;
+  bottom: 0;
+  position: absolute;
+}
+
+#start, #ranking, #help, #credits {
+  margin-top: 8px;
+  background-color: Transparent;
+  border: none !important;
+}
