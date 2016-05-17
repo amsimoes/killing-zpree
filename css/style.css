@@ -24,7 +24,7 @@ button::hover {
   border-color: red;
 }
 
-#myCanvas {
+#mapCanvas {
   z-index: 1;
   position: absolute;
 }

@@ -7,17 +7,16 @@
 const n = 25;
 
 function main() {
-  var canvas = document.getElementById("myCanvas");
-  var ctx = canvas.getContext("2d");
+  var mapCanvas = document.getElementById("mapCanvas");
 
-  initCanvas(canvas);
+  initCanvas(mapCanvas);
 
-  var c_width = canvas.width;
-  var c_height = canvas.height;
+  var c_width = mapCanvas.width;
+  var c_height = mapCanvas.height;
   console.log(c_width);
   console.log(c_height);
 
-  menu(canvas, c_width, c_height);
+  menu(mapCanvas, c_width, c_height);
 }
 
 function initCanvas(canvas) {
@@ -43,8 +42,10 @@ function initCanvas(canvas) {
 }
 
 function menu(canvas, cw, ch) {
+  console.log("funcao menuuuu...");
   enableLogo(cw, ch, canvas.offsetLeft);
 
+  var logo = document.getElementById("logo");
   var start_button = document.getElementById("start");
   var ranking_button = document.getElementById("ranking");
   var help_button = document.getElementById("help");
@@ -54,17 +55,20 @@ function menu(canvas, cw, ch) {
   enableButton(ranking_button, canvas.offsetLeft+(cw/3.1), canvas.offsetTop+(ch/2)+(ch/getConstN()*2.5));
   enableButton(help_button, canvas.offsetLeft+(cw/2.3), canvas.offsetTop+(ch/2)+(ch/getConstN()*5));
   enableButton(credits_button, canvas.offsetLeft+(cw/2.6), canvas.offsetTop+(ch/2)+(ch/getConstN()*7.5));
+  console.log("Botoes ativados...");
 
   var ev_start = function(event) {
     disableButton(start_button);
     disableButton(ranking_button);
     disableButton(help_button);
     disableButton(credits_button);
+    disableImage(logo);
     start_button.removeEventListener("click", ev_start);
     credits_button.removeEventListener("click", ev_credits);
     window.removeEventListener("resize", resize_menu);
     document.getElementById("options").style.visibility = "hidden";
     console.log("Start!!!!");
+    initGame(canvas, cw, ch, 4);
   };
   var ev_credits = function(event) {
     disableButton(start_button);
@@ -87,13 +91,27 @@ function menu(canvas, cw, ch) {
   start_button.addEventListener("click",  ev_start);
   credits_button.addEventListener("click", ev_credits);
   window.addEventListener("resize", resize_menu);
+  console.log("A espera de algum evento...");
 }
 
 function initGame(canvas, cw, ch, level) {
   var ctx = canvas.getContext("2d");
 
-  clearCanvas(canvas, cw, ch);
+  clearCanvas(ctx, cw, ch);
 
+  var map = new Map(cw, ch);
+  map.levelSelect(ctx, level);
+
+  var resize_game = function (e) {
+    initCanvas(canvas);
+    cw = canvas.width;
+    ch = canvas.height;
+    map.cw = cw;
+    map.ch = ch;
+    map.width = cw / n;
+    map.height = ch / n;
+    map.draw(ctx, cw, ch);
+  }
 }
 
 function clearCanvas(canvas, cw, ch) {
@@ -117,6 +135,10 @@ function enableButton(button, x, y) {
 function disableButton(button) {
   button.style.visibility = "hidden";
   button.disabled = true;
+}
+
+function disableImage(img) {
+  img.style.visibility = "hidden";
 }
 
 function getConstN() {
