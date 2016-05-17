@@ -14,6 +14,8 @@ function main() {
 
   var c_width = canvas.width;
   var c_height = canvas.height;
+  console.log(c_width);
+  console.log(c_height);
 
   menu(canvas, c_width, c_height);
 }
@@ -48,27 +50,23 @@ function menu(canvas, cw, ch) {
   var help_button = document.getElementById("help");
   var credits_button = document.getElementById("credits");
 
-  enableButton(start_button, );
-  enableButton(ranking_button);
-  enableButton(help_button);
-  enableButton(credits_button);
+  enableButton(start_button, canvas.offsetLeft+(cw/2.5), canvas.offsetTop+(ch/2));
+  enableButton(ranking_button, canvas.offsetLeft+(cw/3.1), canvas.offsetTop+(ch/2)+(ch/getConstN()*2.5));
+  enableButton(help_button, canvas.offsetLeft+(cw/2.3), canvas.offsetTop+(ch/2)+(ch/getConstN()*5));
+  enableButton(credits_button, canvas.offsetLeft+(cw/2.6), canvas.offsetTop+(ch/2)+(ch/getConstN()*7.5));
 
 }
 
 function enableLogo(cw, ch, canvas_offset) {
-  var logo = document.getElementsById("logo");
-  logo.style.width = (cw / getConstN() * 2).toString()+"px";
-  logo.style.height = (ch / getConstN() * 2).toString()+"px";
-  logo.style.left = (canvas_offset + (cw/2) - (cw/getConstN())).toString()+"px";
-  logo.style.top = (ch / getConstN() * 2).toString()+"px";
+  var logo = document.getElementById("logo");
+  logo.style.left = (canvas_offset+cw/3.6).toString()+"px";
+  logo.style.top = (ch / getConstN() * 3).toString()+"px";
+  logo.style.visibility = "visible";
 }
 
-function enableButton(button, x, y, w, h, font_size) {
+function enableButton(button, x, y) {
   button.style.left = x.toString()+"px";
-  button.style.right = y.toString()+"px";
-  button.style.width = w.toString()+"px";
-  button.style.height = h.toString()+"px";
-  button.style.font_size = font_size.toString()+"px";
+  button.style.top = y.toString()+"px";
   button.style.visibility = "visible";
   button.disabled = false;
 }
