@@ -55,6 +55,49 @@ function menu(canvas, cw, ch) {
   enableButton(help_button, canvas.offsetLeft+(cw/2.3), canvas.offsetTop+(ch/2)+(ch/getConstN()*5));
   enableButton(credits_button, canvas.offsetLeft+(cw/2.6), canvas.offsetTop+(ch/2)+(ch/getConstN()*7.5));
 
+  var ev_start = function(event) {
+    disableButton(start_button);
+    disableButton(ranking_button);
+    disableButton(help_button);
+    disableButton(credits_button);
+    start_button.removeEventListener("click", ev_start);
+    credits_button.removeEventListener("click", ev_credits);
+    window.removeEventListener("resize", resize_menu);
+    document.getElementById("options").style.visibility = "hidden";
+    console.log("Start!!!!");
+  };
+  var ev_credits = function(event) {
+    disableButton(start_button);
+    disableButton(ranking_button);
+    disableButton(help_button);
+    disableButton(credits_button);
+    start_button.removeEventListener("click", ev_start);
+    credits_button.removeEventListener("click", ev_credits);
+    window.removeEventListener("resize", resize_menu);
+    document.getElementById("options").style.visibility = "hidden";
+    console.log("Credits!!!!");
+  };
+  var resize_menu = function(event) {
+    start_button.removeEventListener("click", ev_start);
+    credits_button.removeEventListener("click", ev_credits);
+    window.removeEventListener("resize", resize_menu);
+    initCanvas(canvas);
+    menu(canvas, cw, ch);
+  }
+  start_button.addEventListener("click",  ev_start);
+  credits_button.addEventListener("click", ev_credits);
+  window.addEventListener("resize", resize_menu);
+}
+
+function initGame(canvas, cw, ch, level) {
+  var ctx = canvas.getContext("2d");
+
+  clearCanvas(canvas, cw, ch);
+
+}
+
+function clearCanvas(canvas, cw, ch) {
+  canvas.clearRect(0, 0, cw, ch);
 }
 
 function enableLogo(cw, ch, canvas_offset) {
@@ -75,7 +118,6 @@ function disableButton(button) {
   button.style.visibility = "hidden";
   button.disabled = true;
 }
-
 
 function getConstN() {
   return n;
