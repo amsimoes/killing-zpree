@@ -25,6 +25,11 @@ button::hover {
 }
 
 #mapCanvas {
+  z-index: 2;
+  position: absolute;
+}
+
+#heroCanvas, #zombieCanvas, #powerCanvas {
   z-index: 1;
   position: absolute;
 }
@@ -36,6 +41,12 @@ button::hover {
 
 #logo {
   z-index: 6;
+  position: absolute;
+  visibility: hidden;
+}
+
+#hero {
+  z-index: 2;
   position: absolute;
   visibility: hidden;
 }

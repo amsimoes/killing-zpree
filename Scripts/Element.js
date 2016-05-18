@@ -1,28 +1,43 @@
 class Element {
-    constructor(img, pos, width, height, sound) {
-        this.img = img; //img TODO
-        this.pos = pos; //Position
+    constructor(img, x, y, width, height) {
+        this.img = document.getElementById(img); //img TODO
+        this.x = x; //Position
+        this.y = y;
         this.width = width;
         this.height = height;
-        this.sound = sound; //sound url
+        //this.sound = sound; //sound url
+
         //Image Data
         var g_cv = document.createElement("canvas");
         g_cv.width = this.width;
         g_cv.height = this.height;
         var g_ctx = g_cv.getContext("2d");
         g_ctx.drawImage(this.img, 0, 0, width, height);
-        this.imgData = g_ctx.getImageData(0, 0, width, height);
+        //this.imgData = g_ctx.getImageData(0, 0, width, height);
+    }
+    update(ctx) {
+      this.draw(ctx);
+      this.updatePosition();
     }
     draw(ctx) {
-        ctx.drawImage(this.img, this.pos.x, this.pos.y, this.width, this.height);
+        ctx.save();
+
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
         //TODO putImageData <- mais eficaz
-        //console.log("img: " + this.img + " x: " + this.pos.x + " y:" + this.pos.y + " w: " + this.width + " h:" + this.height);
+        //console.log("img: " + this.img + " x: " + this.x + " y:" + this.y + " w: " + this.width + " h:" + this.height);
+
+        ctx.restore();
     }
     clear(ctx) {
         ctx.clearRect(this.x, this.y, this.width, this.height);
     }
     playSound() {
         //TODO
+    }
+    getDistance(element) {
+      var vx = this.x - element.x;
+      var vy = this.y - element.y;
+      return Math.sqrt(vx*vx+vy*vy);
     }
     checkCollision(element) {
         if (this.checkCollisionBoundingBox(element)) {

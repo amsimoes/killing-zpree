@@ -5,6 +5,7 @@ class Coord {
     this.x = x;
     this.y = y;
   }
+
   toString() {
     return "("+this.x+", "+this.y+")";
   }
@@ -18,6 +19,7 @@ class Map {
     this.height = ch / n;
     this.coords = [];
   }
+
   draw(ctx, cw, ch) {
     ctx.clearRect(0, 0, cw, ch);
     for(let i=0; i<this.coords.length; i++) {
@@ -25,10 +27,10 @@ class Map {
       ctx.fillRect(this.coords[i].x * this.width, this.coords[i].y * this.height, this.width, this.height);
     }
   }
+
   renderLevel(ctx, array) {
-      //reset coords array
       console.log("A desenhar mapa...");
-      this.coords.length = 0;
+      this.coords.length = 0; //reset coords array
       ctx.fillStyle = "#ffffff";
       var i, j;
       for (i = 0; i < n; i++) {
