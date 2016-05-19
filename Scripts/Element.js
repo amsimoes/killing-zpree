@@ -13,7 +13,7 @@ class Element {
         g_cv.height = this.height;
         var g_ctx = g_cv.getContext("2d");
         g_ctx.drawImage(this.img, 0, 0, width, height);
-        //this.imgData = g_ctx.getImageData(0, 0, width, height);
+        this.imgData = g_ctx.getImageData(0, 0, width, height);
     }
     update(ctx) {
       this.draw(ctx);
@@ -39,6 +39,9 @@ class Element {
       var vy = this.y - element.y;
       return Math.sqrt(vx*vx+vy*vy);
     }
+    getPosition() {
+      return (this.x, this.y);
+    }
     checkCollision(element) {
         if (this.checkCollisionBoundingBox(element)) {
             if (this.checkCollisionPixelByPixel(element)) {
@@ -51,27 +54,27 @@ class Element {
         }
     }
     checkCollisionBoundingBox(element) {
-        if (this.pos.x < element.pos.x + element.width && this.pos.x + this.width > element.pos.x && this.pos.y < element.pos.y + element.height && this.pos.y + this.height > element.pos.y) {
+        if (this.x < element.x + element.width && this.x + this.width > element.x && this.y < element.y + element.height && this.y + this.height > element.y) {
             return true;
         } else {
             return false;
         }
     }
     checkCollisionPixelByPixel(element) {
-        var x_left = Math.floor(Math.max(this.pos.x, element.pos.x));
-        var x_right = Math.floor(Math.min(this.pos.x + this.width, element.pos.x + element.width));
-        var y_top = Math.floor(Math.max(this.pos.y, element.pos.y));
-        var y_bottom = Math.floor(Math.min(this.pos.y + this.height, element.pos.y + element.height));
+        var x_left = Math.floor(Math.max(this.x, element.x));
+        var x_right = Math.floor(Math.min(this.x + this.width, element.x + element.width));
+        var y_top = Math.floor(Math.max(this.y, element.y));
+        var y_bottom = Math.floor(Math.min(this.y + this.height, element.y + element.height));
 
         for (var y = y_top; y < y_bottom; y++) {
             for (var x = x_left; x < x_right; x++) {
-                var x_0 = Math.round(x - this.pos.x);
-                var y_0 = Math.round(y - this.pos.y);
+                var x_0 = Math.round(x - this.x);
+                var y_0 = Math.round(y - this.y);
                 var n_pix = y_0 * this.width + x_0; //n pixel to check
                 var pix_op = this.imgData.data[4 * n_pix + 3]; //opacity (R G B A)
 
-                var element_x_0 = Math.round(x - element.pos.x);
-                var element_y_0 = Math.round(y - element.pos.y);
+                var element_x_0 = Math.round(x - element.x);
+                var element_y_0 = Math.round(y - element.y);
                 var element_n_pix = element_y_0 * element.width + element_x_0; //n pixel to check
                 var element_pix_op = element.imgData.data[4 * element_n_pix + 3]; //opacity (R G B A)
 

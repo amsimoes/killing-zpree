@@ -29,7 +29,9 @@ class Map {
   }
 
   renderLevel(ctx, array) {
-      console.log("A desenhar mapa...");
+      //console.log("A desenhar mapa...");
+      var brick = document.getElementById("brick");
+      var purple_brick = document.getElementById("purple");
       this.coords.length = 0; //reset coords array
       ctx.fillStyle = "#ffffff";
       var i, j;
@@ -37,8 +39,11 @@ class Map {
           for (j = 0; j < n; j++) {
               if (array[i][j] === "x") {
                   ctx.fillRect(j * this.width, i * this.height, this.width, this.height);
-                  this.coords.push(new Coord(j, i));
+                  //ctx.drawImage(purple_brick, j*this.width, i*this.height, this.width, this.height);
+              } else {
+                  ctx.drawImage(brick, j * this.width, i * this.height, this.width, this.height);
               }
+              this.coords.push(new Coord(j, i));
           }
       }
   }

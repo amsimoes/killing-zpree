@@ -9,6 +9,12 @@ var score = 0;
 var Img = {};
 var timeStarted = 0;
 var paused = false;
+var frames;
+var id_zombie = 0;
+var id_bullet = 0;
+
+Enemy.list = {};
+Bullet.list = {};
 
 function main() {
   var mapCanvas = document.getElementById("mapCanvas");
@@ -127,6 +133,9 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
   var power_ctx = powerCanvas.getContext("2d");
   clearCanvas(map_ctx, hero_ctx, zombie_ctx, power_ctx, cw, ch);
 
+  Enemy.list = {};
+  Bullet.list = {};
+  frames = 0;
   paused = false;
   score = 0;
   timeStarted = Date.now();
@@ -139,14 +148,32 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
       return;
     }
 
+    frames++;
+    //console.log("frame nr = "+frames);
+
     map_ctx.clearRect(0, 0, cw, ch);
     map.levelSelect(map_ctx, level);
 
     hero.update(map_ctx);
+    enemy.update(map_ctx, hero.x, hero.y);
+    Bullet.update(map_ctx);
+
+    for(let key in Enemy.list) {
+        if(Enemy.list[key].toRemove)
+          delete Enemy.list[key];
+        else
+          Enemy.list[key].update(map_ctx, hero.x, hero.y);
+    }
   }
 
-  var hero = new Hero("hero", cw/2, cw/2, 40, 40);
+  //console.log("Posicao Heroi: ("+hero.x+","+hero.y+")");
+
+  var hero = new Hero("hero", cw/2, cw/2, 40, 40, cw, ch);
+  var enemy = new Enemy("zombie", 0, ch/2, 40, 40, cw, ch, hero);
+  //var bullet = new Bullet("bullet", hero.x, hero.y, 24, 24, cw, ch, 1, 1);
+
   hero.draw(map_ctx);
+  enemy.draw(map_ctx);
   // Desenhar Mapa
   var map = new Map(cw, ch);
   map.levelSelect(map_ctx, level);
@@ -181,6 +208,30 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
       hero.pressingRight = false;
   }
   document.addEventListener("keyup", keyUpHandler);
+
+  var mouseDownHandler = function (mouse) {
+    console.log("Mouse down.");
+    if(mouse.which === 1)
+      hero.pressingMouseLeft = true;
+  }
+  document.addEventListener("mousedown", mouseDownHandler);
+
+  var mouseUpHandler = function (mouse) {
+    if(mouse.which === 1)
+      hero.pressingMouseLeft = false;
+  }
+  document.addEventListener("mouseup", mouseUpHandler);
+
+  var mouseMoveHandler = function (mouse) {
+    //console.log("Mouse move!");
+    var mouseX = mouse.clientX - document.getElementById("mapCanvas").getBoundingClientRect().left;
+    var mouseY = mouse.clientY - document.getElementById("mapCanvas").getBoundingClientRect().top;
+    // ?
+    mouseX -= cw/2;
+    mouseY -= ch/2;
+    hero.aimAngle = Math.atan2(mouseY, mouseX) / Math.PI*180;
+  }
+  document.addEventListener("mousemove", mouseMoveHandler);
 
   // EventListener para dar resize
   var resize_game = function (e) {

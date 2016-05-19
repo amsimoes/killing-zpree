@@ -3,6 +3,10 @@ body, html {
   overflow: hidden;
 }
 
+img {
+  visibility: hidden;
+}
+
 canvas {
   margin: auto;
   display: block;
