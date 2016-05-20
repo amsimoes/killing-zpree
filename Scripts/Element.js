@@ -12,15 +12,17 @@ class Element {
         g_cv.width = this.width;
         g_cv.height = this.height;
         var g_ctx = g_cv.getContext("2d");
-        g_ctx.drawImage(this.img, 0, 0, width, height);
-        this.imgData = g_ctx.getImageData(0, 0, width, height);
+        g_ctx.drawImage(this.img, 0, 0, this.width, this.height);
+        this.imgData = g_ctx.getImageData(0, 0, 32, 32);
     }
     update(ctx) {
-      this.draw(ctx);
+      //this.draw(ctx);
       this.updatePosition();
     }
     draw(ctx) {
         ctx.save();
+
+        //console.log("[ELEMENT] DRAW");
 
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
         //TODO putImageData <- mais eficaz
@@ -45,6 +47,7 @@ class Element {
     checkCollision(element) {
         if (this.checkCollisionBoundingBox(element)) {
             if (this.checkCollisionPixelByPixel(element)) {
+                console.log("Colisao!!!!");
                 return true;
             } else {
                 return false;

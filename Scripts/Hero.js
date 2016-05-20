@@ -3,13 +3,15 @@
 class Hero extends Element {
   constructor(img, x, y, width, height, cw, ch) {
     super(img, x, y, width, height);
+    this.img = document.getElementById(img);
     this.cw = cw;
     this.ch = ch;
     this.pressingUp = false;
     this.pressingDown = false;
     this.pressingLeft = false;
     this.pressingRight = false;
-    this.pressingMouseLeft = false;
+    this.shooting = false;
+    this.atkCounter = 0;
     this.aimAngle = 0;
     console.log("Hero created.");
     console.log(cw);
@@ -17,12 +19,41 @@ class Hero extends Element {
   }
 
   update(ctx, bullet) {
+    this.draw(ctx);
     super.update(ctx);
-    this.updatePosition();
+    this.atkCounter++;
     if(this.pressingRight || this.pressingLeft || this.pressingUp || this.pressingDown)
       this.spriteAnimCounter += 0.2;
-    if(this.pressingMouseLeft)
+    if(this.shooting)
       this.attack();
+    for(let key in Enemy.list) {
+      if(this.checkCollision(Enemy.list[key]))
+        this.onDeath(ctx);
+    }
+  }
+
+  draw(ctx) {
+    ctx.save();
+
+    //console.log("[HERO] DRAW");
+
+    if(this.pressingUp === false && this.pressingRight === false && this.pressingLeft === false && this.pressingRight === false) {
+      //ctx.drawImage("hero_idle", this.x, this.y, 32, 32);
+      ctx.drawImage(this.img, this.img.width/2, 0, this.img.width/4, this.img.height, this.x, this.y, this.img.width/4, this.img.height);
+    }
+
+    if(this.pressingUp)
+      ctx.drawImage(this.img, 0, 0, this.img.width/4, this.img.height, this.x, this.y, this.img.width/4, this.img.height);
+    else if(this.pressingRight)
+      ctx.drawImage(this.img, this.img.width/4, 0, this.img.width/4, this.img.height, this.x, this.y, this.img.width/4, this.img.height);
+    else if(this.pressingDown)
+      ctx.drawImage(this.img, this.img.width/2, 0, this.img.width/4, this.img.height, this.x, this.y, this.img.width/4, this.img.height);
+    else if(this.pressingLeft)
+      ctx.drawImage(this.img, this.img.width/4*3, 0, this.img.width/4, this.img.height, this.x, this.y, this.img.width/4, this.img.height);
+    //TODO putImageData <- mais eficaz
+    //console.log("img: " + this.img + " x: " + this.x + " y:" + this.y + " w: " + this.width + " h:" + this.height);
+
+    ctx.restore();
   }
 
   updatePosition() {
@@ -47,13 +78,18 @@ class Hero extends Element {
   }
 
   attack() {
-    Bullet.generate(this, this.cw, this.ch);
+    if(this.atkCounter >= 5) {
+      this.atkCounter = 0;
+      Bullet.generate(this, this.cw, this.ch);
+    }
   }
 
-  onDeath() {
+  onDeath(ctx) {
     var timeSurvived = Date.now() - timeStarted;
     console.log("DEAD. GAME OVER.");
     console.log("You survived for " + (timeSurvived/1000)/60 + "minutes.");
-    enableGameOver();
+    /*ctx.font = "50px Arial";
+    ctx.fillText("DEAD", this.cw/2, this.ch/2);*/
+    gameOver = true;
   }
 }

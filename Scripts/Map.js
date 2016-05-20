@@ -29,7 +29,6 @@ class Map {
   }
 
   renderLevel(ctx, array) {
-      //console.log("A desenhar mapa...");
       var brick = document.getElementById("brick");
       var purple_brick = document.getElementById("purple");
       this.coords.length = 0; //reset coords array
@@ -348,9 +347,29 @@ class Map {
         ];
         return level;
     }
-    levelSelect(ctx, n) {
+    levelSelect(ctx, score) {
         var level;
-        switch (n) {
+        if(score < 10)
+          level = this.level1();
+        else if(score >= 10 && score < 20)
+          level = this.level2();
+        else if(score >= 20 && score < 30)
+          level = this.level3();
+        else if(score >= 30 && score < 40)
+          level = this.level4();
+        else if(score >= 40 && score < 50)
+          level = this.level5();
+        else if(score >= 50 && score < 60)
+          level = this.level6();
+        else if(score >= 60 && score < 70)
+          level = this.level7();
+        else if(score >= 70 && score < 80)
+          level = this.level8();
+        else if(score >= 80 && score < 90)
+          level = this.level9();
+        else if(score >= 90 && score < 100)
+          level = this.level10();
+        /*switch (n) {
             case 1:
                 level = this.level1();
                 break;
@@ -381,7 +400,7 @@ class Map {
             case 10:
                 level = this.level10();
                 break;
-        }
+        }*/
         this.renderLevel(ctx, level);
     }
 }

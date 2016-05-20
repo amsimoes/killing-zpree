@@ -8,10 +8,13 @@ const n = 25;
 var score = 0;
 var Img = {};
 var timeStarted = 0;
-var paused = false;
+//var paused = false;
 var frames;
 var id_zombie = 0;
 var id_bullet = 0;
+var zombieSpeed = 0.5;
+var gameOver = false;
+//var gameLevel = 1;
 
 Enemy.list = {};
 Bullet.list = {};
@@ -100,7 +103,7 @@ function menu(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch) {
     window.removeEventListener("resize", resize_menu);
     document.getElementById("options").style.visibility = "hidden";
     console.log("Start!!!!");
-    newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, 4);
+    newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, 1);
   };
   var ev_credits = function(event) {
     disableButton(start_button);
@@ -133,12 +136,15 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
   var power_ctx = powerCanvas.getContext("2d");
   clearCanvas(map_ctx, hero_ctx, zombie_ctx, power_ctx, cw, ch);
 
+  var timerID = 0;
+
   Enemy.list = {};
   Bullet.list = {};
   frames = 0;
-  paused = false;
+  var paused = false;
   score = 0;
   timeStarted = Date.now();
+  gameOver = false;
 
   var update = function() {
     if(paused) {
@@ -147,41 +153,64 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
       map_ctx.fillText("Paused", cw/2, ch/2);
       return;
     }
+    if(gameOver) {
+      clearInterval(timerID);
+      enableGameOverText(cw, ch, score);
+      /*map_ctx.font = "30px Arial";
+      map_ctx.fillText("DEAD", cw/2, ch/2);
+      map_ctx.fillText("Press [Space] to return.", cw/2, ch/2+50);*/
+    }
 
     frames++;
-    //console.log("frame nr = "+frames);
+    console.log("SCORE = "+score);
 
     map_ctx.clearRect(0, 0, cw, ch);
-    map.levelSelect(map_ctx, level);
+    map.levelSelect(map_ctx, score);
 
     hero.update(map_ctx);
-    enemy.update(map_ctx, hero.x, hero.y);
+    Enemy.update(map_ctx, cw, ch, hero);
     Bullet.update(map_ctx);
 
-    for(let key in Enemy.list) {
-        if(Enemy.list[key].toRemove)
+    /*for(let key in Enemy.list) {
+        if(Enemy.list[key].toRemove) {
           delete Enemy.list[key];
+          //score++;
+          //console.log("SCORE: "+score);
+        }
         else
           Enemy.list[key].update(map_ctx, hero.x, hero.y);
-    }
+    }*/
   }
 
   //console.log("Posicao Heroi: ("+hero.x+","+hero.y+")");
 
   var hero = new Hero("hero", cw/2, cw/2, 40, 40, cw, ch);
-  var enemy = new Enemy("zombie", 0, ch/2, 40, 40, cw, ch, hero);
+  Enemy.randomGenerate(map_ctx, cw, ch);
+  Enemy.randomGenerate(map_ctx, cw, ch);
+  Enemy.randomGenerate(map_ctx, cw, ch);
+
+  //var enemy = new Enemy("zombie", 0, ch/2, 40, 40, cw, ch, hero);
   //var bullet = new Bullet("bullet", hero.x, hero.y, 24, 24, cw, ch, 1, 1);
 
   hero.draw(map_ctx);
-  enemy.draw(map_ctx);
+  //enemy.draw(map_ctx);
+
   // Desenhar Mapa
   var map = new Map(cw, ch);
-  map.levelSelect(map_ctx, level);
+  map.levelSelect(map_ctx, score);  // Começa no nivel 1
   console.log("Mapa desenhado.");
 
   // EventListener para keyDown
   var keyDownHandler = function (e) { // W A S D e PAUSE
-    console.log("Handler keyDown");
+    //console.log("Handler keyDown");
+    if(e.keyCode === 80) {
+      console.log("TECLA PAUSE");
+      paused =! paused;
+      if(paused)
+        console.log("PAUSE = TRUE");
+      else
+        console.log("PAUSE = FALSE");
+    }
     if(e.keyCode === 87) // W
       hero.pressingUp = true;
     if(e.keyCode === 65)  // A
@@ -190,14 +219,41 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
       hero.pressingDown = true;
     if(e.keyCode === 68)  // D
       hero.pressingRight = true;
-    if(e.keyCode === 80)  // P
-      paused =! paused;
+    if(e.keyCode === 27) {  // ESC
+      console.log("ESC - A voltar ao menu...");
+      clearCanvas(map_ctx, hero_ctx, zombie_ctx, power_ctx, cw, ch);
+      clearInterval(timerID);
+      //menu(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch);
+      main();
+    }
+    if(e.keyCode === 32 && gameOver) {
+      console.log("GAMEOVER - A voltar ao menu.");
+      clearCanvas(map_ctx, hero_ctx, zombie_ctx, power_ctx, cw, ch);
+      main();
+    }
+
+    if(e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40)
+      hero.shooting = true;
+    if(e.keyCode === 37 && e.keyCode !== 40)  // LEFT ARROW
+      hero.aimAngle = 180;
+    if(e.keyCode === 38 && e.keyCode !== 37) // UP ARROW
+      hero.aimAngle = 270;
+    if(e.keyCode === 39)
+      hero.aimAngle = 0;
+    if(e.keyCode === 40)
+      hero.aimAngle = 90;
+    if(e.keyCode === 39 && e.keyCode === 40)
+      hero.aimAngle = 315;
+    if(e.keyCode === 37 && e.keyCode === 40)
+      hero.aimAngle = 225;
+    if(e.keyCode === 37 && e.keyCode === 38)
+      hero.aimAngle = 135;
   }
   document.addEventListener("keydown", keyDownHandler);
 
   // EventListener para keyUp
   var keyUpHandler = function (e) { // W A S D e PAUSE
-    console.log("Handler keyUp");
+    //console.log("Handler keyUp");
     if(e.keyCode === 87) // W
       hero.pressingUp = false;
     if(e.keyCode === 65)  // A
@@ -206,11 +262,13 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
       hero.pressingDown = false;
     if(e.keyCode === 68)  // D
       hero.pressingRight = false;
+    if(e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40)
+      hero.shooting = false;
   }
   document.addEventListener("keyup", keyUpHandler);
 
   var mouseDownHandler = function (mouse) {
-    console.log("Mouse down.");
+    //console.log("Mouse down.");
     if(mouse.which === 1)
       hero.pressingMouseLeft = true;
   }
@@ -229,15 +287,16 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
     // ?
     mouseX -= cw/2;
     mouseY -= ch/2;
+
     hero.aimAngle = Math.atan2(mouseY, mouseX) / Math.PI*180;
   }
-  document.addEventListener("mousemove", mouseMoveHandler);
+  //document.addEventListener("mousemove", mouseMoveHandler, false);
 
   // EventListener para dar resize
   var resize_game = function (e) {
     initCanvas(mapCanvas, heroCanvas, zombieCanvas, powerCanvas)
-    cw = canvas.width;
-    ch = canvas.height;
+    cw = mapCanvas.width;
+    ch = mapCanvas.height;
     map.cw = cw;
     map.ch = ch;
     map.width = cw / n;
@@ -246,7 +305,7 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
   }
   window.addEventListener("resize", resize_game);
 
-  setInterval(update, 40);
+  timerID = setInterval(update, 40);
 }
 
 function clearCanvas(map_ctx, hero_ctx, zombie_ctx, power_ctx, cw, ch) {
@@ -261,6 +320,24 @@ function enableLogo(cw, ch, canvas_offset) {
   logo.style.left = (canvas_offset+cw/3.6).toString()+"px";
   logo.style.top = (ch / getConstN() * 3).toString()+"px";
   logo.style.visibility = "visible";
+}
+
+function enableGameOverText(cw, ch, score) {
+  var text = document.getElementById("gameover");
+  var text_score = document.getElementById("score");
+  text_score.innerHTML = score;
+  text.style.left = (cw/2).toString() + "px";
+  text.style.top = (ch/2).toString() + "px";
+  text.style.width = "20px";
+  text.style.fontSize = "15px";
+  text.style.visibility = "visible";
+}
+
+function playSound(id, speed) {
+    var audio = document.getElementById(id);
+    audio.currentTime = 0;
+    audio.playbackRate = speed;
+    audio.play();
 }
 
 function enableButton(button, x, y) {

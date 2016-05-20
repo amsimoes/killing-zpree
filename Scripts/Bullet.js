@@ -2,6 +2,7 @@
 
 class Bullet extends Element {
   constructor(img, x, y, width, height, cw, ch, speedX, speedY) {
+    console.log("New bullet!!!");
     super(img, x, y, width, height);
     this.timer = 0;
     this.speedX = speedX;
@@ -25,10 +26,12 @@ class Bullet extends Element {
 Bullet.list = {};
 
 Bullet.update = function(ctx) {
-  console.log("update bullet");
   for(var key in Bullet.list) {
     var b = Bullet.list[key];
+    b.draw(ctx);
     b.update(ctx);
+
+    var toRemove = false;
 
     b.timer++;
     if(b.timer > 75)
@@ -36,8 +39,10 @@ Bullet.update = function(ctx) {
 
     for(var enemy in Enemy.list) {
       if(b.checkCollision(Enemy.list[enemy])) {
+        score++;
         toRemove = true;
-        Enemy.list[enemy].toRemove = true;
+        Enemy.list[enemy].onDeath();
+        //delete Enemy.list[enemy];
       }
     }
 
@@ -53,5 +58,6 @@ Bullet.generate = function(hero, cw, ch) {
 
     var spdX = Math.cos(angle/180*Math.PI)*5;
     var spdY = Math.sin(angle/180*Math.PI)*5;
-    new Bullet("bullet", this.x, this.y, this.width, this.height, cw, ch, spdX, spdY);
+    new Bullet("bullet", hero.x, hero.y, 16, 16, cw, ch, spdX, spdY);
+    console.log("Bullet gerada.");
   }
