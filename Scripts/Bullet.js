@@ -2,7 +2,6 @@
 
 class Bullet extends Element {
   constructor(img, x, y, width, height, cw, ch, speedX, speedY) {
-    console.log("New bullet!!!");
     super(img, x, y, width, height);
     this.timer = 0;
     this.speedX = speedX;
@@ -16,10 +15,13 @@ class Bullet extends Element {
     this.x += this.speedX;
     this.y += this.speedY;
 
-    if(this.x < 0 || this.x > this.cw)
-      this.speedX = -this.speedX;
-    if(this.y < 0 || this.y > this.ch)
-      this.speedY = -this.speedY;
+    // RICOCHETE BORDAS
+    if(ricochete) {
+      if(this.x < 0 || this.x > this.cw)
+        this.speedX = -this.speedX;
+      if(this.y < 0 || this.y > this.ch)
+        this.speedY = -this.speedY;
+    }
   }
 }
 
@@ -34,8 +36,13 @@ Bullet.update = function(ctx) {
     var toRemove = false;
 
     b.timer++;
-    if(b.timer > 75)
-      toRemove = true;
+    if(!ricochete) {
+      if(b.timer > 100)
+        toRemove = true;
+    } else {
+      if(b.timer > 150)
+        toRemove = true;
+    }
 
     for(var enemy in Enemy.list) {
       if(b.checkCollision(Enemy.list[enemy])) {
@@ -51,6 +58,7 @@ Bullet.update = function(ctx) {
   }
 }
 
+// Nova BALA + Velocidade da bala
 Bullet.generate = function(hero, cw, ch) {
     var height = 24;
     var width = 24;
@@ -58,6 +66,5 @@ Bullet.generate = function(hero, cw, ch) {
 
     var spdX = Math.cos(angle/180*Math.PI)*5;
     var spdY = Math.sin(angle/180*Math.PI)*5;
-    new Bullet("bullet", hero.x, hero.y, 16, 16, cw, ch, spdX, spdY);
-    console.log("Bullet gerada.");
+    new Bullet("bullet", hero.x, hero.y, 12, 12, cw, ch, spdX, spdY);
   }

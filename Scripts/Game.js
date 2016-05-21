@@ -6,18 +6,20 @@
 
 const n = 25;
 var score = 0;
-var Img = {};
 var timeStarted = 0;
-//var paused = false;
 var frames;
 var id_zombie = 0;
 var id_bullet = 0;
 var zombieSpeed = 0.5;
 var gameOver = false;
+var mapAnimCounter = true;
+var zombieAnimCounter = true;
+var ricochete = false;
+
 //var gameLevel = 1;
 
-Enemy.list = {};
-Bullet.list = {};
+/*Enemy.list = {};
+Bullet.list = {};*/
 
 function main() {
   var mapCanvas = document.getElementById("mapCanvas");
@@ -137,14 +139,16 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
   clearCanvas(map_ctx, hero_ctx, zombie_ctx, power_ctx, cw, ch);
 
   var timerID = 0;
-
-  Enemy.list = {};
-  Bullet.list = {};
-  frames = 0;
   var paused = false;
+  frames = 0;
   score = 0;
   timeStarted = Date.now();
   gameOver = false;
+  var levelMap;
+
+  Enemy.list = {};
+  Bullet.list = {};
+
 
   var update = function() {
     if(paused) {
@@ -154,35 +158,28 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
       return;
     }
     if(gameOver) {
-      clearInterval(timerID);
+      //clearInterval(timerID);
       enableGameOverText(cw, ch, score);
-      /*map_ctx.font = "30px Arial";
-      map_ctx.fillText("DEAD", cw/2, ch/2);
-      map_ctx.fillText("Press [Space] to return.", cw/2, ch/2+50);*/
+      map_ctx.fillText("Game Over", cw/2, ch/2);
+      return;
     }
 
     frames++;
+    if(frames % 50 == 0)
+      mapAnimCounter = !mapAnimCounter;
+    if(frames % 8 == 0)
+      zombieAnimCounter = !zombieAnimCounter;
+
     console.log("SCORE = "+score);
 
     map_ctx.clearRect(0, 0, cw, ch);
-    map.levelSelect(map_ctx, score);
+    levelMap = map.levelSelect(map_ctx, score);
 
     hero.update(map_ctx);
     Enemy.update(map_ctx, cw, ch, hero);
     Bullet.update(map_ctx);
 
-    /*for(let key in Enemy.list) {
-        if(Enemy.list[key].toRemove) {
-          delete Enemy.list[key];
-          //score++;
-          //console.log("SCORE: "+score);
-        }
-        else
-          Enemy.list[key].update(map_ctx, hero.x, hero.y);
-    }*/
   }
-
-  //console.log("Posicao Heroi: ("+hero.x+","+hero.y+")");
 
   var hero = new Hero("hero", cw/2, cw/2, 40, 40, cw, ch);
   Enemy.randomGenerate(map_ctx, cw, ch);
@@ -228,6 +225,7 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
     }
     if(e.keyCode === 32 && gameOver) {
       console.log("GAMEOVER - A voltar ao menu.");
+      clearInterval(timerID);
       clearCanvas(map_ctx, hero_ctx, zombie_ctx, power_ctx, cw, ch);
       main();
     }

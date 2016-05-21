@@ -28,7 +28,7 @@ class Enemy extends Element {
     ctx.save();
 
     //console.log("[ENEMY] DRAW");
-    if(frames % 4 == 0)
+    if(zombieAnimCounter)
       ctx.drawImage(this.img, this.img.width/2, 0, this.img.width/2, this.img.height, this.x, this.y, 32, 32);
     else
       ctx.drawImage(this.img, 0, 0, this.img.width/2, this.img.height, this.x, this.y, 32, 32);
@@ -59,7 +59,7 @@ class Enemy extends Element {
 }
 
 Enemy.update = function(ctx, cw, ch, hero) {
-  if(frames % 200 == 0) // de 8 em 8 segundos
+  if(frames % 50 == 0) 
     this.randomGenerate(ctx, cw, ch);
   for(var key in Enemy.list){
     //console.log("update???");

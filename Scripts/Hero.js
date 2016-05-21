@@ -18,7 +18,7 @@ class Hero extends Element {
     console.log(ch);
   }
 
-  update(ctx, bullet) {
+  update(ctx, attackSpeed) {
     this.draw(ctx);
     super.update(ctx);
     this.atkCounter++;
@@ -42,13 +42,13 @@ class Hero extends Element {
       ctx.drawImage(this.img, this.img.width/2, 0, this.img.width/4, this.img.height, this.x, this.y, this.img.width/4, this.img.height);
     }
 
-    if(this.pressingUp)
+    if(this.aimAngle === 270 || this.pressingUp) // CIMA
       ctx.drawImage(this.img, 0, 0, this.img.width/4, this.img.height, this.x, this.y, this.img.width/4, this.img.height);
-    else if(this.pressingRight)
+    else if(this.aimAngle === 0 || this.pressingRight) // DIREITA
       ctx.drawImage(this.img, this.img.width/4, 0, this.img.width/4, this.img.height, this.x, this.y, this.img.width/4, this.img.height);
-    else if(this.pressingDown)
+    else if(this.aimAngle === 90 || this.pressingDown) // BAIXO
       ctx.drawImage(this.img, this.img.width/2, 0, this.img.width/4, this.img.height, this.x, this.y, this.img.width/4, this.img.height);
-    else if(this.pressingLeft)
+    else if(this.aimAngle === 180 || this.pressingLeft) // ESQUERDA
       ctx.drawImage(this.img, this.img.width/4*3, 0, this.img.width/4, this.img.height, this.x, this.y, this.img.width/4, this.img.height);
     //TODO putImageData <- mais eficaz
     //console.log("img: " + this.img + " x: " + this.x + " y:" + this.y + " w: " + this.width + " h:" + this.height);
@@ -77,8 +77,9 @@ class Hero extends Element {
       this.y = this.ch - 1.75*this.height;
   }
 
+  // ATTACK SPEED
   attack() {
-    if(this.atkCounter >= 5) {
+    if(this.atkCounter >= 4) {
       this.atkCounter = 0;
       Bullet.generate(this, this.cw, this.ch);
     }
