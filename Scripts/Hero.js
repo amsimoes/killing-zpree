@@ -18,14 +18,14 @@ class Hero extends Element {
     console.log(ch);
   }
 
-  update(ctx, attackSpeed) {
+  update(ctx, attackSpeed, map) {
     this.draw(ctx);
-    super.update(ctx);
+    super.update(ctx, map);
     this.atkCounter++;
     if(this.pressingRight || this.pressingLeft || this.pressingUp || this.pressingDown)
       this.spriteAnimCounter += 0.2;
     if(this.shooting)
-      this.attack();
+      this.attack(attackSpeed);
     for(let key in Enemy.list) {
       if(this.checkCollision(Enemy.list[key]))
         this.onDeath(ctx);
@@ -56,7 +56,7 @@ class Hero extends Element {
     ctx.restore();
   }
 
-  updatePosition() {
+  updatePosition(map) {
     if(this.pressingRight)
       this.x += 5;
     if(this.pressingLeft)
@@ -75,11 +75,19 @@ class Hero extends Element {
       this.y = this.height/2;
     if(this.y > this.ch - 1.75*this.height)
       this.y = this.ch - 1.75*this.height;
+
+    console.log("[HERO] x = "+this.x+" y = "+this.y);
+    for(let i=0; i<map.coords.length; i++) {
+      if(this.y === n*map.coords[i].y) {
+        if(this.x < (n*map.coords[i].x + 32) || this.x > (n*map.coords[i].x - 32))
+          console.log("[HEROI] COLISAO OBSTACULO");
+      }
+    }
   }
 
   // ATTACK SPEED
-  attack() {
-    if(this.atkCounter >= 4) {
+  attack(attackSpeed) {
+    if(this.atkCounter >= attackSpeed) {
       this.atkCounter = 0;
       Bullet.generate(this, this.cw, this.ch);
     }

@@ -50,20 +50,18 @@ class Map {
                 break;
               case 3:
                 ctx.drawImage(map_ground, 0, 0, map_border.width/5, map_border.height, j*this.width, i*this.height, this.width, this.height);
-                //ctx.drawImage(map_ground, map_border.width/5*, 0, map_border.width/5, map_border.height, j*this.width, i*this.height, this.width, this.height);
                 break;
               case 4:
                 ctx.drawImage(map_ground, map_border.width/5*4, 0, map_border.width/5, map_border.height, j*this.width, i*this.height, this.width, this.height);
                 break;
-              case 5:
+              case 5: // OBSTACULO
                 ctx.drawImage(map_border, map_border.width/3*2, 0, map_border.width/3, map_border.height, j*this.width, i*this.height, this.width, this.height);
+                this.coords.push(new Coord(j, i));
                 break;
             }
             ctx.restore();
-            this.coords.push(new Coord(j, i));
           }
       }
-      return array;
   }
 
   level1() {
@@ -368,58 +366,56 @@ class Map {
     }
     levelSelect(ctx, score) {
         var level;
-        if(score < 10)
+        if(score < 10) {
           level = this.level1();
-        else if(score >= 10 && score < 20)
+          zombieMovSpeed = 1.5;
+          zombieLimit = 10;
+          zombieSpawn = 2;
+        } else if(score >= 10 && score < 30) {
+          if(score === 10)
+            mapLevel = 2;
           level = this.level2();
-        else if(score >= 20 && score < 30)
+          zombieMovSpeed = 0.1;
+          zombieLimit = 20 + 10;
+          zombieSpawn = 1;
+        } else if(score >= 30 && score < 55) {
+          if(score === 30)
+            mapLevel = 3;
           level = this.level3();
-        else if(score >= 30 && score < 40)
+          zombieMovSpeed = 1.5;
+          zombieLimit = 25 + 20 + 10;
+          zombieSpawn = 0.5;
+        } else if(score > 55 && score < 85) {
+          if(score === 55)
+            mapLevel = 4;
           level = this.level4();
-        else if(score >= 40 && score < 50)
+          zombieMovSpeed = 1.5;
+          zombieLimit = 30;
+        } else if(score > 85 && score < 115) {
           level = this.level5();
-        else if(score >= 50 && score < 60)
+          zombieMovSpeed = 1.5;
+          zombieLimit = 30;
+        } else if(score > 115 && score < 150) {
           level = this.level6();
-        else if(score >= 60 && score < 70)
+          zombieMovSpeed = 2;
+          zombieLimit = 35;
+        } else if(score > 150 && score < 185) {
           level = this.level7();
-        else if(score >= 70 && score < 80)
+          zombieMovSpeed = 2;
+          zombieLimit = 40;
+        } else if(score > 185 && score < 225) {
           level = this.level8();
-        else if(score >= 80 && score < 90)
+          zombieMovSpeed = 2;
+          zombieLimit = 45;
+        } else if(score > 225 && score < 270) {
           level = this.level9();
-        else if(score >= 90 && score < 100)
+          zombieMovSpeed = 2.5;
+          zombieLimit = 50;
+        } else if(score > 270 && score < 330) {
           level = this.level10();
-        /*switch (n) {
-            case 1:
-                level = this.level1();
-                break;
-            case 2:
-                level = this.level2();
-                break;
-            case 3:
-                level = this.level3();
-                break;
-            case 4:
-                level = this.level4();
-                break;
-            case 5:
-                level = this.level5();
-                break;
-            case 6:
-                level = this.level6();
-                break;
-            case 7:
-                level = this.level7();
-                break;
-            case 8:
-                level = this.level8();
-                break;
-            case 9:
-                level = this.level9();
-                break;
-            case 10:
-                level = this.level10();
-                break;
-        }*/
+          zombieMovSpeed = 3;
+          zombieLimit = 60;
+        }
         this.renderLevel(ctx, level);
     }
 }

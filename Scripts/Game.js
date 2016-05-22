@@ -11,15 +11,15 @@ var frames;
 var id_zombie = 0;
 var id_bullet = 0;
 var zombieSpeed = 0.5;
+var zombieLimit = 0;
 var gameOver = false;
 var mapAnimCounter = true;
 var zombieAnimCounter = true;
 var ricochete = false;
+var zombieMovSpeed;
+var zombieSpawn;
+var mapLevel = 1;
 
-//var gameLevel = 1;
-
-/*Enemy.list = {};
-Bullet.list = {};*/
 
 function main() {
   var mapCanvas = document.getElementById("mapCanvas");
@@ -140,11 +140,13 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
 
   var timerID = 0;
   var paused = false;
+  zombieMovSpeed = 1.5;
+  zombieSpawn = 2;  // De 2 em 2 segundos faz spawn um zombie
+
   frames = 0;
   score = 0;
   timeStarted = Date.now();
   gameOver = false;
-  var levelMap;
 
   Enemy.list = {};
   Bullet.list = {};
@@ -164,33 +166,28 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
       return;
     }
 
+
     frames++;
     if(frames % 50 == 0)
       mapAnimCounter = !mapAnimCounter;
     if(frames % 8 == 0)
       zombieAnimCounter = !zombieAnimCounter;
 
-    console.log("SCORE = "+score);
+    //map_ctx.clearRect(0, 0, cw, ch);
+    map.levelSelect(map_ctx, score);
 
-    map_ctx.clearRect(0, 0, cw, ch);
-    levelMap = map.levelSelect(map_ctx, score);
 
-    hero.update(map_ctx);
-    Enemy.update(map_ctx, cw, ch, hero);
+    hero.update(map_ctx, 4, map);
+    Enemy.update(map_ctx, cw, ch, hero, zombieMovSpeed, zombieSpawn, map);
     Bullet.update(map_ctx);
-
   }
 
-  var hero = new Hero("hero", cw/2, cw/2, 40, 40, cw, ch);
-  Enemy.randomGenerate(map_ctx, cw, ch);
-  Enemy.randomGenerate(map_ctx, cw, ch);
-  Enemy.randomGenerate(map_ctx, cw, ch);
-
-  //var enemy = new Enemy("zombie", 0, ch/2, 40, 40, cw, ch, hero);
-  //var bullet = new Bullet("bullet", hero.x, hero.y, 24, 24, cw, ch, 1, 1);
+  var hero = new Hero("hero", cw/2, cw/2, 32, 32, cw, ch);
+  Enemy.randomGenerate(map_ctx, cw, ch, zombieMovSpeed);
+  Enemy.randomGenerate(map_ctx, cw, ch, zombieMovSpeed);
+  Enemy.randomGenerate(map_ctx, cw, ch, zombieMovSpeed);
 
   hero.draw(map_ctx);
-  //enemy.draw(map_ctx);
 
   // Desenhar Mapa
   var map = new Map(cw, ch);
@@ -208,6 +205,7 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
       else
         console.log("PAUSE = FALSE");
     }
+
     if(e.keyCode === 87) // W
       hero.pressingUp = true;
     if(e.keyCode === 65)  // A
@@ -230,8 +228,10 @@ function newGame(mapCanvas, heroCanvas, zombieCanvas, powerCanvas, cw, ch, level
       main();
     }
 
-    if(e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40)
+    if(e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
       hero.shooting = true;
+      e.preventDefault();
+    }
     if(e.keyCode === 37 && e.keyCode !== 40)  // LEFT ARROW
       hero.aimAngle = 180;
     if(e.keyCode === 38 && e.keyCode !== 37) // UP ARROW
@@ -352,6 +352,13 @@ function disableButton(button) {
 
 function disableImage(img) {
   img.style.visibility = "hidden";
+}
+
+function playSound(id, speed) {
+    var audio = document.getElementById(id);
+    audio.currentTime = 0;
+    audio.playbackRate = speed;
+    audio.play();
 }
 
 function getConstN() {

@@ -13,11 +13,10 @@ class Element {
         g_cv.height = this.height;
         var g_ctx = g_cv.getContext("2d");
         g_ctx.drawImage(this.img, 0, 0, this.width, this.height);
-        this.imgData = g_ctx.getImageData(0, 0, 32, 32);
+        this.imgData = g_ctx.getImageData(0, 0, this.img.width, this.img.height);
     }
-    update(ctx) {
-      //this.draw(ctx);
-      this.updatePosition();
+    update(ctx, map) {
+      this.updatePosition(map);
     }
     draw(ctx) {
         ctx.save();
@@ -83,11 +82,11 @@ class Element {
 
                 if (pix_op == 255 && element_pix_op == 255) {
                     /*Debug*/
-                    console.log("This -> (R:" + this.imgData.data[4 * n_pix] + ", G:" + this.imgData.data[4 * n_pix + 1] + ", B:" + this.imgData.data[4 * n_pix + 2] + ", A:" + pix_op + ")");
+                    /*console.log("This -> (R:" + this.imgData.data[4 * n_pix] + ", G:" + this.imgData.data[4 * n_pix + 1] + ", B:" + this.imgData.data[4 * n_pix + 2] + ", A:" + pix_op + ")");
                     console.log("Element -> (R:" + element.imgData.data[4 * element_n_pix] + ", G:" + element.imgData.data[4 * element_n_pix + 1] + ", B:" + element.imgData.data[4 * element_n_pix + 2] + ", A:" + element_pix_op + ")");
                     console.log("Collision -> (x:" + x + ", y:" + y +")");
                     console.log("This(Local) -> (x:" + x_0 + ", y:" + y_0+")");
-                    console.log("Element(Local) -> (x:" + element_x_0 + ", y:" + element_y_0+")");
+                    console.log("Element(Local) -> (x:" + element_x_0 + ", y:" + element_y_0+")");*/
                     return true;
                 }
             }

@@ -46,7 +46,6 @@ Bullet.update = function(ctx) {
 
     for(var enemy in Enemy.list) {
       if(b.checkCollision(Enemy.list[enemy])) {
-        score++;
         toRemove = true;
         Enemy.list[enemy].onDeath();
         //delete Enemy.list[enemy];
