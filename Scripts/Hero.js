@@ -79,7 +79,7 @@ class Hero extends Element {
     console.log("[HERO] x = "+this.x+" y = "+this.y);
     for(let i=0; i<map.coords.length; i++) {
       if(this.y === n*map.coords[i].y) {
-        if(this.x < (n*map.coords[i].x + 32) || this.x > (n*map.coords[i].x - 32))
+        if(this.x < (n*map.coords[i].x + 16) || this.x > (n*map.coords[i].x - 16))
           console.log("[HEROI] COLISAO OBSTACULO");
       }
     }
