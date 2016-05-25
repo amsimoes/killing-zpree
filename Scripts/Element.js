@@ -12,8 +12,8 @@ class Element {
         g_cv.width = this.width;
         g_cv.height = this.height;
         var g_ctx = g_cv.getContext("2d");
-        g_ctx.drawImage(this.img, 0, 0, this.width, this.height);
-        this.imgData = g_ctx.getImageData(0, 0, this.img.width, this.img.height);
+        g_ctx.drawImage(this.img, 0, 0, 32, 32);
+        this.imgData = g_ctx.getImageData(0, 0, 32, 32);
     }
     update(ctx, map) {
       this.updatePosition(map);

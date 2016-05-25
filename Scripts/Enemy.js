@@ -26,7 +26,7 @@ class Enemy extends Element {
   }
 
   draw(ctx) {
-    //ctx.save();
+    ctx.save();
 
     //console.log("[ENEMY] DRAW");
     if(zombieAnimCounter)
@@ -35,26 +35,43 @@ class Enemy extends Element {
       ctx.drawImage(this.img, 0, 0, this.img.width/2, this.img.height, this.x, this.y, this.img.width/2, this.img.height);
     //super.draw(ctx);
 
-    //ctx.restore();
+    ctx.restore();
   }
 
   updatePosition(map) {
-    //var heroPos = hero.getPosition();
+    var obstaculo = false;
+    var obstaculoLeft = false;
+    var obstaculoUp = false;
+    var obstaculoDown = false;
+    var obstaculoRight = false;
     var diffX = this.hero_x - this.x;
     var diffY = this.hero_y - this.y;
 
-    if(diffX > 0)
-      this.x += this.movSpeed;
-    else
-      this.x -= this.movSpeed;
-    if(diffY > 0)
-      this.y += this.movSpeed;
-    else
-      this.y -= this.movSpeed;
-
-    for(let i=0; i<map.coords.length; i++) {
-      if(this.x == map.coords[i].x && this.y == map.coords[i].y)
-        console.log("[ZOMBIE] COLISAO OBSTACULO");
+    for (var i =0; i<map.coords.length; i++) {
+      // LEFT
+      if(map.coords[i].x===Math.floor((this.x-(0.1*this.width))/(this.cw/n)) && map.coords[i].y===Math.floor((this.y+(0*this.height))/(this.ch/n))) {
+        obstaculoLeft = true;
+        break;
+      } else if(map.coords[i].y===Math.floor((this.y-(0.1*this.height))/(this.ch/n)) && map.coords[i].x===Math.floor((this.x+(0*this.width))/(this.cw/n))) {
+        obstaculoUp = true;
+        break;
+      } else if(map.coords[i].x===Math.floor((this.x+(0.9*this.width))/(this.cw/n)) && map.coords[i].y===Math.floor((this.y+(0*this.height))/(this.ch/n))) {
+        obstaculoRight = true;
+        break;
+      } else if(map.coords[i].y===Math.floor((this.y+(0.9*this.height))/(this.ch/n)) && map.coords[i].x===Math.floor((this.x+(0*this.width))/(this.cw/n))) {
+        obstaculoDown = true;
+        break;
+      }
+    }
+    if(!obstaculoRight && !obstaculoDown && !obstaculoLeft && !obstaculoUp) {
+      if(diffX > 0)
+        this.x += this.movSpeed;
+      else if(diffX < 0)
+        this.x -= this.movSpeed;
+      if(diffY > 0)
+        this.y += this.movSpeed;
+      else if(diffY < 0)
+        this.y -= this.movSpeed;
     }
   }
 
@@ -65,16 +82,17 @@ class Enemy extends Element {
 
 // timeSpawn -> tempo em segundos que da spawn um zombie
 Enemy.update = function(ctx, cw, ch, hero, movSpeed, timeSpawn, map) {
-  if(frames % (25*timeSpawn) == 0 && id_zombie < zombieLimit)
+  if(frames % (25*timeSpawn) == 0)
     this.randomGenerate(ctx, cw, ch, movSpeed);
   for(var key in Enemy.list){
     //console.log("update???");
-		Enemy.list[key].update(ctx, hero, map);
     Enemy.list[key].draw(ctx);
+		Enemy.list[key].update(ctx, hero, map);
 	}
 	for(var key in Enemy.list){
 		if(Enemy.list[key].toRemove) {
       delete Enemy.list[key];
+      playSound("zombieDeath", 3);
       score++;
       console.log("Score ="+score);
     }
@@ -99,6 +117,7 @@ Enemy.randomGenerate = function(ctx, cw, ch, movSpeed) {
       y = ch;
     }
     var en = new Enemy("zombie", x, y, 40, 40, cw, ch, movSpeed);
+    //playSound("zombieAppear", 3);
     //en.draw(ctx);
     console.log("A gerar novo Zombie em ("+x+","+y+")");
   }

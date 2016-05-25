@@ -13,6 +13,7 @@ class Hero extends Element {
     this.shooting = false;
     this.atkCounter = 0;
     this.aimAngle = 0;
+    this.movSpeed = 5;
     console.log("Hero created.");
     console.log(cw);
     console.log(ch);
@@ -22,8 +23,6 @@ class Hero extends Element {
     this.draw(ctx);
     super.update(ctx, map);
     this.atkCounter++;
-    if(this.pressingRight || this.pressingLeft || this.pressingUp || this.pressingDown)
-      this.spriteAnimCounter += 0.2;
     if(this.shooting)
       this.attack(attackSpeed);
     for(let key in Enemy.list) {
@@ -57,14 +56,25 @@ class Hero extends Element {
   }
 
   updatePosition(map) {
+    for (var i =0; i<map.coords.length; i++) {
+      if(map.coords[i].x===Math.floor((this.x-(0.1*this.width))/(this.cw/n)) && map.coords[i].y===Math.floor((this.y+(0*this.height))/(this.ch/n)))
+        this.pressingLeft=false;
+      if(map.coords[i].y===Math.floor((this.y-(0.1*this.height))/(this.ch/n)) && map.coords[i].x===Math.floor((this.x+(0*this.width))/(this.cw/n)))
+        this.pressingUp=false;
+      if(map.coords[i].x===Math.floor((this.x+(0.9*this.width))/(this.cw/n)) && map.coords[i].y===Math.floor((this.y+(0*this.height))/(this.ch/n)))
+        this.pressingRight=false;
+      if(map.coords[i].y===Math.floor((this.y+(0.9*this.height))/(this.ch/n)) && map.coords[i].x===Math.floor((this.x+(0*this.width))/(this.cw/n)))
+        this.pressingDown=false;
+    }
+
     if(this.pressingRight)
-      this.x += 5;
+      this.x += this.movSpeed;
     if(this.pressingLeft)
-      this.x -= 5;
+      this.x -= this.movSpeed;
     if(this.pressingDown)
-      this.y += 5;
+      this.y += this.movSpeed;
     if(this.pressingUp)
-      this.y -= 5;
+      this.y -= this.movSpeed;
 
     // Verificar se a posicao é valida (Dentro dos limites)
     if(this.x < this.width/2)
@@ -75,14 +85,6 @@ class Hero extends Element {
       this.y = this.height/2;
     if(this.y > this.ch - 1.75*this.height)
       this.y = this.ch - 1.75*this.height;
-
-    console.log("[HERO] x = "+this.x+" y = "+this.y);
-    for(let i=0; i<map.coords.length; i++) {
-      if(this.y === n*map.coords[i].y) {
-        if(this.x < (n*map.coords[i].x + 16) || this.x > (n*map.coords[i].x - 16))
-          console.log("[HEROI] COLISAO OBSTACULO");
-      }
-    }
   }
 
   // ATTACK SPEED
@@ -97,8 +99,7 @@ class Hero extends Element {
     var timeSurvived = Date.now() - timeStarted;
     console.log("DEAD. GAME OVER.");
     console.log("You survived for " + (timeSurvived/1000)/60 + "minutes.");
-    /*ctx.font = "50px Arial";
-    ctx.fillText("DEAD", this.cw/2, this.ch/2);*/
     gameOver = true;
+    playSound("game_over", 3);
   }
 }

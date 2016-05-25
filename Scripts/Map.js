@@ -180,7 +180,7 @@ class Map {
             [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
             [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
             [1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         ];
         return level;
     }
@@ -369,52 +369,69 @@ class Map {
         if(score < 10) {
           level = this.level1();
           zombieMovSpeed = 1.5;
-          zombieLimit = 10;
-          zombieSpawn = 2;
+          zombieLimit = 100;
+          zombieSpawn = 0.3;
         } else if(score >= 10 && score < 30) {
           if(score === 10)
-            mapLevel = 2;
+            changeLevel = true;
           level = this.level2();
-          zombieMovSpeed = 0.1;
-          zombieLimit = 20 + 10;
-          zombieSpawn = 1;
+          zombieMovSpeed = 2;
+          zombieLimit = 100;
+          zombieSpawn = 0.3;
         } else if(score >= 30 && score < 55) {
           if(score === 30)
-            mapLevel = 3;
+            changeLevel = true;
           level = this.level3();
-          zombieMovSpeed = 1.5;
-          zombieLimit = 25 + 20 + 10;
-          zombieSpawn = 0.5;
-        } else if(score > 55 && score < 85) {
+          zombieMovSpeed = 2;
+          zombieLimit =  100;
+          zombieSpawn = 0.2;
+        } else if(score >= 55 && score < 85) {
           if(score === 55)
-            mapLevel = 4;
+            changeLevel = true;
           level = this.level4();
-          zombieMovSpeed = 1.5;
-          zombieLimit = 30;
-        } else if(score > 85 && score < 115) {
+          zombieMovSpeed = 2;
+          zombieLimit = 100;
+          zombieSpawn = 0.3;
+        } else if(score >= 85 && score < 115) {
+          if(score === 85)
+            changeLevel = true;
           level = this.level5();
-          zombieMovSpeed = 1.5;
-          zombieLimit = 30;
-        } else if(score > 115 && score < 150) {
+          zombieMovSpeed = 2;
+          zombieLimit = 100;
+          zombieSpawn = 0.3;
+        } else if(score >= 115 && score < 150) {
+          if(score === 115)
+            changeLevel = true;
           level = this.level6();
-          zombieMovSpeed = 2;
-          zombieLimit = 35;
-        } else if(score > 150 && score < 185) {
+          zombieMovSpeed = 2.2;
+          zombieLimit = 150;
+          zombieSpawn = 0.3;
+        } else if(score >= 150 && score < 185) {
+          if(score === 150)
+            changeLevel = true;
           level = this.level7();
-          zombieMovSpeed = 2;
-          zombieLimit = 40;
-        } else if(score > 185 && score < 225) {
+          zombieMovSpeed = 2.4;
+          zombieLimit = 185;
+          zombieSpawn = 0.2;
+        } else if(score >= 185 && score < 225) {
+          if(score === 185)
+            changeLevel = true;
           level = this.level8();
-          zombieMovSpeed = 2;
-          zombieLimit = 45;
-        } else if(score > 225 && score < 270) {
+          zombieMovSpeed = 2.6;
+          zombieLimit = 225;
+          zombieSpawn = 0.2;
+        } else if(score >= 225 && score < 270) {
+          if(score === 225)
+            changeLevel = true;
           level = this.level9();
-          zombieMovSpeed = 2.5;
-          zombieLimit = 50;
-        } else if(score > 270 && score < 330) {
+          zombieMovSpeed = 2.8;
+          zombieLimit = 270;
+          zombieSpawn = 0.1;
+        } else if(score >= 270 && score < 330) {
           level = this.level10();
           zombieMovSpeed = 3;
-          zombieLimit = 60;
+          zombieLimit = 330;
+          zombieSpawn = 0.05;
         }
         this.renderLevel(ctx, level);
     }

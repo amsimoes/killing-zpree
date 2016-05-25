@@ -13,17 +13,8 @@
     <script type="text/javascript" src="Scripts/Game.js"></script>
 </head>
 <body>
-    <main id="container">
+    <div id="main">
       <canvas id="mapCanvas">
-        HTML5 Canvas not supported.
-      </canvas>
-      <canvas id="heroCanvas">
-        HTML5 Canvas not supported.
-      </canvas>
-      <canvas id="powerCanvas">
-        HTML5 Canvas not supported.
-      </canvas>
-      <canvas id="zombieCanvas">
         HTML5 Canvas not supported.
       </canvas>
       <img id="logo" src="Sprites/LogoKZ.png"/>
@@ -34,27 +25,34 @@
       <img id="map_border" src="Sprites/mapspr.png"/>
       <img id="map_ground" src="Sprites/map_ground.png"/>
       <menu id="options">
+        <br><br><br>
         <button id="start" type="button">
-          <img src="Sprites/start.png" height="55px"/>
-        </button>
-        <br>
-        <button id="ranking" type="button">
-          <img src="Sprites/highscore.png" height="55px"/>
-        </button>
-        <br>
-        <button id="help" type="button">
-          <img src="Sprites/help.png" height="55px"/>
-        </button>
-        <br>
-        <button id="credits" type="button">
-          <img src="Sprites/credits.png" height="55px"/>
+          <img id="start_img" src="Sprites/start.png" height="55px"/>
         </button>
         <br>
       </menu>
-      <div id="gameover">
+      <!--<div id="gameover">
         <p>GAME OVER</p>
         <p>Score: <span id="score"></span></p>
         <p>Press [Space] to return to home page!</p>
-      </div>
+      </div>-->
+      <audio id="play_game">
+        <source src="Sounds/killingspree.mp3" type="audio/mp3">
+      </audio>
+      <audio id="shot">
+        <source src="Sounds/shot.wav" type="audio/wav">
+      </audio>
+      <audio id="zombieAppear">
+        <source src="Sounds/z_appear.wav" type="audio/wav">
+      </audio>
+      <audio id="zombieDeath">
+        <source src="Sounds/z_death.amr" type="audio/amr">
+      </audio>
+      <audio id="game_over">
+        <source src="Sounds/hero_death.wav" type="audio/wav">
+      </audio>
+      <audio id="next_level">
+        <source src="Sounds/play1.wav" type="audio/wav">
+      </audio>
     </main>
 </body>

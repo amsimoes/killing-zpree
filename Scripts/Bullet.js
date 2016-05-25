@@ -3,6 +3,10 @@
 class Bullet extends Element {
   constructor(img, x, y, width, height, cw, ch, speedX, speedY) {
     super(img, x, y, width, height);
+    this.x = x;
+    this.y = y;
+    this.ch = ch;
+    this.cw = cw;
     this.timer = 0;
     this.speedX = speedX;
     this.speedY = speedY;
@@ -11,7 +15,18 @@ class Bullet extends Element {
     Bullet.list[id_bullet] = this;
   }
 
-  updatePosition() {
+  updatePosition(map) {
+    for (var i =0; i<map.coords.length; i++) {
+      if(map.coords[i].x===Math.floor((this.x-(0.1*this.width))/(this.cw/n)) && map.coords[i].y===Math.floor((this.y+(0*this.height))/(this.ch/n)))
+        this.toRemove = true;
+      if(map.coords[i].y===Math.floor((this.y-(0.1*this.height))/(this.ch/n)) && map.coords[i].x===Math.floor((this.x+(0*this.width))/(this.cw/n)))
+        this.toRemove = true;
+      if(map.coords[i].x===Math.floor((this.x+(0.9*this.width))/(this.cw/n)) && map.coords[i].y===Math.floor((this.y+(0*this.height))/(this.ch/n)))
+        this.toRemove = true;
+      if(map.coords[i].y===Math.floor((this.y+(0.9*this.height))/(this.ch/n)) && map.coords[i].x===Math.floor((this.x+(0*this.width))/(this.cw/n)))
+        this.toRemove = true;
+    }
+
     this.x += this.speedX;
     this.y += this.speedY;
 
@@ -22,16 +37,21 @@ class Bullet extends Element {
       if(this.y < 0 || this.y > this.ch)
         this.speedY = -this.speedY;
     }
+
+    for(var key in Bullet.list) {
+      if(Bullet.list[key].toRemove)
+        delete Bullet.list[key];
+    }
   }
 }
 
 Bullet.list = {};
 
-Bullet.update = function(ctx) {
+Bullet.update = function(ctx, map) {
   for(var key in Bullet.list) {
     var b = Bullet.list[key];
     b.draw(ctx);
-    b.update(ctx);
+    b.update(ctx, map);
 
     var toRemove = false;
 
@@ -40,7 +60,7 @@ Bullet.update = function(ctx) {
       if(b.timer > 100)
         toRemove = true;
     } else {
-      if(b.timer > 150)
+      if(b.timer > 300)
         toRemove = true;
     }
 
@@ -48,10 +68,8 @@ Bullet.update = function(ctx) {
       if(b.checkCollision(Enemy.list[enemy])) {
         toRemove = true;
         Enemy.list[enemy].onDeath();
-        //delete Enemy.list[enemy];
       }
     }
-
     if(toRemove)
       delete Bullet.list[key];
   }
@@ -63,7 +81,8 @@ Bullet.generate = function(hero, cw, ch) {
     var width = 24;
     var angle = hero.aimAngle;
 
-    var spdX = Math.cos(angle/180*Math.PI)*5;
-    var spdY = Math.sin(angle/180*Math.PI)*5;
+    var spdX = Math.cos(angle/180*Math.PI)*7;
+    var spdY = Math.sin(angle/180*Math.PI)*7;
     new Bullet("bullet", hero.x, hero.y, 12, 12, cw, ch, spdX, spdY);
+    playSound("shot", 1);
   }
