@@ -114,7 +114,6 @@ function newGame(mapCanvas, cw, ch, level) {
       map_ctx.fillStyle = "#bbbbbb";
       map_ctx.textAlign = "center";
       map_ctx.fillText("Prima [Espaço] para voltar ao menu.", cw/2+20, ch/2+20);
-      console.log("PQ CARALHO????");
       return;
     }
     if(paused) {
