@@ -8,5 +8,7 @@ Sprites and some of the gameplay based on "The Journey of the Prairie King" mini
 INSTRUCTIONS: 
 
 WASD - Player Movement
+
 Arrows - Shooting
+
 P - Pause
