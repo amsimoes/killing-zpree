@@ -6,6 +6,7 @@ Live-Demo (Still buggy and very hard): [DEMO](https://amsimoes.github.io/Killing
 Sprites and some of the gameplay based on "The Journey of the Prairie King" mini-game in Stardew Valley
 
 **INSTRUCTIONS:** <br/>
+
 WASD - Player Movement<br/>
 Arrows - Shooting<br/>
 P - Pause
