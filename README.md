@@ -11,4 +11,6 @@ WASD - Player Movement<br/>
 Arrows - Shooting<br/>
 P - Pause
 
+<p align="center">
 ![gameplay](http://i.imgur.com/FsuYo1r.png)
+</p>
