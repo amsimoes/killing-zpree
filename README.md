@@ -12,5 +12,5 @@ Arrows - Shooting<br/>
 P - Pause
 
 <p align="center">
-![gameplay](http://i.imgur.com/FsuYo1r.png)
+<img src="http://i.imgur.com/FsuYo1r.png" alt="gameplay"/>
 </p>
