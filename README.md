@@ -10,3 +10,5 @@ Sprites and some of the gameplay based on "The Journey of the Prairie King" mini
 WASD - Player Movement<br/>
 Arrows - Shooting<br/>
 P - Pause
+
+![gameplay](http://i.imgur.com/FsuYo1r.png)
